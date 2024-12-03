@@ -5,38 +5,34 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class SimpleServer {
-	
-	// main
-	public static void main(String [] args) {
-		SimpleServer use = new SimpleServer();
-		use.establishServer();
-	}
- 
-	public void establishServer() {
-		
-	// field
-	int port = 1254;
-	DataInputStream in;
-	DataOutputStream out;
-	ServerSocket server;
-	Socket socket;
-	double aNumber = 17;
+    
+    public static void main(String[] args) {
+        SimpleServer use = new SimpleServer();
+        use.establishServer();
+    }
 
-	try {
-		server = new ServerSocket(port); // establish the server's socket and assign the port
-		socket = server.accept(); // listen for communications
-		in = new DataInputStream (socket.getInputStream());
-		out = new DataOutputStream(socket.getOutputStream());
-		System.out.println(in.readDouble());
-		out.writeDouble(aNumber);
-		
-	} catch (IOException e) {
-		e.printStackTrace();
-	}
-	
-	
-	
-	}
-	
-	
+    public void establishServer() {
+        int port = 1254;
+        String reply = "[SYN, ACK]!";
+
+        try (ServerSocket server = new ServerSocket(port)) {
+            System.out.println("( Server is up and running david! )> ( >␣o)");
+
+            while (true) {
+                try (
+                    Socket socket = server.accept();
+                    DataInputStream in = new DataInputStream(socket.getInputStream());
+                    DataOutputStream out = new DataOutputStream(socket.getOutputStream())
+                ) {
+                    System.out.println("ClientHater1002 Connected!");
+                    String client = in.readUTF();
+                    out.writeUTF(reply);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
